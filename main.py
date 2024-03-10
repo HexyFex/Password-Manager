@@ -5,9 +5,7 @@ import string  # for generating random password and for string operations
 from formating import Textcolor  # import Textcolor from formating.py
 from functions import encrypt, add, search, delete, backup, start  # import functions from functions.py
 
-os.system('color')
 alpha = string.ascii_letters + string.digits
-
 
 print(Textcolor.HEADER + """\n
  ╔╦╗╦ ╦╔═╗┌┬┐┌─┐┌┐┌┌┐┌┌─┐┌─┐┌─┐┬─┐
@@ -16,15 +14,11 @@ print(Textcolor.HEADER + """\n
 """ + Textcolor.ENDC)
 start()  # call start function
 
-
-
-
-
 # Main Menu
 while True:  # infinite loop
     try:  # try block to handle exceptions
 
-        #os.system('cls')  # clear all
+        # os.system('cls')  # clear all
 
         print("\n" * 3 + " [01] STORE A PASSWORD\
         \n\n [02] SEARCH CREDENTIAL\
@@ -65,7 +59,7 @@ while True:  # infinite loop
         elif menu_option == 2:
             os.system('cls')  # clear all
 
-            print(textcolor.BOLD + "\n" * 2, "SEARCH CREDENTIAL \n" + Textcolor.ENDC)
+            print(Textcolor.BOLD + "\n" * 2, "SEARCH CREDENTIAL \n" + Textcolor.ENDC)
             print("\n [01] SEE A SPECIFIC SAVED CREDENTIAL\
                       \n\n [02] SEE ALL SAVED CREDENTIALS")
             sub_option = int(input("\n" * 3 + " SELECT AN OPTION & PRESS ENTER : "))
