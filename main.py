@@ -3,7 +3,7 @@ import secrets  # for generating random password
 import string  # for generating random password and for string operations
 
 from formating import Textcolor  # import Textcolor from formating.py
-from functions import encrypt, create_csv, add, search, delete, backup
+from functions import encrypt, add, search, delete, backup, start  # import functions from functions.py
 
 os.system('color')
 alpha = string.ascii_letters + string.digits
@@ -14,27 +14,14 @@ print(Textcolor.HEADER + """\n
  ║║║╚╦╝╠═╝│││├─┤││││││├┤ │ ┬├┤ ├┬┘
  ╩ ╩ ╩ ╩  ┴ ┴┴ ┴┘└┘┘└┘└─┘└─┘└─┘┴└─
 """ + Textcolor.ENDC)
+start()  # call start function
 
-data_file = os.path.isfile('data.csv')  # check whether data file is there or not
 
-if data_file == False:  # if not then, create one
-    create_csv()  # call function
 
-    # First time instructions:
-    print(Textcolor.BOLD + "\n WELCOME TO MY PASSWORD MANAGER" + Textcolor.ENDC)
 
-    print("\n THIS APPLICATION USES A MASTER PASSWORD\
-           \n TO ENCRYPT & DECRYPT YOUR DATA.\
-           \n USE ANY ALPHANUMERIC PASSWORD (RECOMMENDED)\
-           \n AND REMEMBER THAT.\
-           \n\n WARNING: IF YOU LOSE YOUR MASTER PASSWORD, THEN YOU\
-           \n WILL NOT BE ABLE TO RECOVER YOUR SAVED PASSWORDS.")
 
-print('\n\n NOTE: MASTER PASSWORD IS A USER DEFINED VALUE\
-       \n NEEDED TO ENCRYPT & DECRYPT DATA CORRECTLY.')
-
-while True:
-
+# Main Menu
+while True:  # infinite loop
     try:  # try block to handle exceptions
 
         os.system('cls')  # clear all

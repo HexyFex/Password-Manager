@@ -5,6 +5,23 @@ import pandas as pd
 
 from formating import Textcolor
 
+def start():
+    data_file = os.path.isfile('data.csv')  # check whether data file is there or not
+    if data_file == False:  # if not then, create one
+        create_csv()  # call function
+
+        # First time instructions:
+        print(Textcolor.BOLD + "\n WELCOME TO MY PASSWORD MANAGER" + Textcolor.ENDC)
+
+        print("\n THIS APPLICATION USES A MASTER PASSWORD\
+               \n TO ENCRYPT & DECRYPT YOUR DATA.\
+               \n USE ANY ALPHANUMERIC PASSWORD (RECOMMENDED)\
+               \n AND REMEMBER THAT.\
+               \n\n WARNING: IF YOU LOSE YOUR MASTER PASSWORD, THEN YOU\
+               \n WILL NOT BE ABLE TO RECOVER YOUR SAVED PASSWORDS.")
+
+    print('\n\n NOTE: MASTER PASSWORD IS A USER DEFINED VALUE\
+           \n NEEDED TO ENCRYPT & DECRYPT DATA CORRECTLY.')
 
 def encrypt(password):
     salt = os.urandom(32)  # Ein neues Salz für jedes Passwort
@@ -101,3 +118,6 @@ def backup():
     df.to_csv(cp, index=False)  # save a copy of same, cp = path
     os.chdir(dp)  # Restoring the default path
     print(Textcolor.OKGREEN + '\n' * 2 + " BACKUP SUCCESSFULLY CREATED." + Textcolor.ENDC)
+
+
+
