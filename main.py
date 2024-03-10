@@ -53,7 +53,8 @@ def add(name, encrypted_pass, url):
     print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
 
 
-def search(url):
+def search(url=""):
+    df = pd.read_csv('data.csv')  # read data from csv file
     if url == "":
         data = pd.read_csv('data.csv')  # read data from csv file
         return data
@@ -152,25 +153,46 @@ while True:
 
 
 
-
-        elif menu_option == 2:  # search a credential
-
+        # search a credential
+        elif menu_option == 2:
             os.system('cls')  # clear all
 
-            print(Textcolor.OKGREEN + "Search a credential" + Textcolor.ENDC)
             url = input("\n ENTER URL OR APP NAME, YOU WANT TO SEARCH: ")
             data = search(url)
+            data = data.to_markdown(tablefmt="orgtbl", index=False)
+
+            print("\n")
             print(data)
 
 
-        elif menu_option == 3:  # edit a credential
-
+        # edit a credential
+        elif menu_option == 3:
             os.system('cls')  # clear all
-            print(Textcolor.OKGREEN + "Edit a credential" + Textcolor.ENDC)  # update_password()
+            print(Textcolor.OKGREEN + " EDIT A CREDENTIAL" + Textcolor.ENDC)
+            url = input("\n ENTER URL OR APP NAME, YOU WANT TO DELETE: ")
+            data = search(url)
+            data = data.to_markdown(tablefmt="orgtbl", index=False)
 
+            print("\n")
+            print(data)
+
+        # delete a credential
         elif menu_option == 4:
             os.system('cls')
-            print(Textcolor.OKGREEN + "Delete a credential" + Textcolor.ENDC)  # delete_password()
+            print(Textcolor.OKGREEN + " DELETE A CREDENTIAL" + Textcolor.ENDC)
+            url = input("\n ENTER URL OR APP NAME, YOU WANT TO DELETE: ")
+            data = search(url)
+            data = data.to_markdown(tablefmt="orgtbl", index=False)
+
+            print("\n")
+            print(data)
+
+            confirmation = input("\n ARE YOU SURE TO DELETE THIS CREDENTIAL? (Y/N): ")
+
+            if confirmation == 'Y':
+                delete(url)
+            else:
+                print(Textcolor.WARNING + " CANCELLED." + Textcolor.ENDC)
 
         print("\n" * 2)
         Continue = input("\n PRESS ENTER TO 'OK' ")
