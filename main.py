@@ -1,9 +1,8 @@
-import os.path  # for checking file existence
 import secrets  # for generating random password
 import string  # for generating random password and for string operations
 
 from formating import Textcolor  # import Textcolor from formating.py
-from functions import encrypt, add, search, delete, backup, start, edit  # import functions from functions.py
+from functions import encrypt, add, search, delete, backup, start, edit, generate_salt  # import functions from functions.py
 
 alpha = string.ascii_letters + string.digits
 
@@ -19,7 +18,6 @@ start()  # call start function
 while True:  # infinite loop
     try:  # try block to handle exceptions
 
-        # os.system('cls')  # clear all
 
         print("\n" * 3 + " [01] STORE A PASSWORD\
         \n\n [02] SEARCH CREDENTIAL\
@@ -29,7 +27,6 @@ while True:  # infinite loop
         menu_option = int(input("\n" * 3 + " SELECT AN OPTION & PRESS ENTER : "))  # input menu option
 
         if menu_option == 1:
-
             print(Textcolor.BOLD + "\n" * 2, "ADD NEW CREDENTIAL\n" + Textcolor.ENDC)
             url = input("\n ENTER URL OR APP NAME, YOU WANT TO SAVE: ")
             name = input("\n ENTER NAME/USERNAME, YOU WANT TO SAVE: ")
@@ -49,8 +46,9 @@ while True:  # infinite loop
                     print(Textcolor.WARNING + '\n WARNING: PLEASE ENTER A URL OR APP NAME: ' + Textcolor.ENDC)
                     url = input("\n ENTER URL OR APP NAME, YOU WANT TO SAVE: ")
 
-            encrypted_pass, salt = encrypt(password)  # call function to encrypt password
-            add(name, encrypted_pass, url, salt)  # call function to add user data
+            salt = generate_salt()  # call function to generate salt
+            dataBase_password = encrypt(password, salt)  # call function to encrypt password and get salt
+            add(name, dataBase_password, url, salt.hex())  # call function to add user data
 
 
 

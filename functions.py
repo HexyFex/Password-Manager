@@ -23,13 +23,24 @@ def start():
     print('\n\n NOTE: MASTER PASSWORD IS A USER DEFINED VALUE\
            \n NEEDED TO ENCRYPT & DECRYPT DATA CORRECTLY.')
 
+def add(name, dataBase_password, url, salt):
+    user_data = {'Url/App name': [url], 'Username': [name],
+                 'Password': [dataBase_password], 'Salt': [salt]}  # will save in same order (,) to csv file
 
-def encrypt(password):
+    df = pd.DataFrame(user_data)  # pack user data into data frame
+    df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
+
+    print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
+
+def generate_salt():
     salt = os.urandom(32)
+    return salt
+
+def encrypt(password, salt):
     hash_object = hash.sha256()
     hash_object.update(salt + password.encode())
-    encrypted_pass = hash_object.hexdigest()
-    return encrypted_pass, salt.hex(),
+    dataBase_password = hash_object.hexdigest()
+    return dataBase_password
 
 
 def decrypt(find_password, salt):
@@ -77,14 +88,7 @@ def create_csv():
     print(Textcolor.OKGREEN + "Data file created successfully." + Textcolor.ENDC)
 
 
-def add(name, encrypted_pass, url, salt):
-    user_data = {'Url/App name': [url], 'Username': [name],
-                 'Password': [encrypted_pass], 'Salt': [salt]}  # will save in same order (,) to csv file
 
-    df = pd.DataFrame(user_data)  # pack user data into data frame
-    df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
-
-    print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
 
 
 def edit(index, new_name, new_password):
