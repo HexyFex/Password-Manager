@@ -5,6 +5,7 @@ import pandas as pd
 
 from formating import Textcolor
 
+
 def start():
     data_file = os.path.isfile('data.csv')  # check whether data file is there or not
     if data_file == False:  # if not then, create one
@@ -22,6 +23,7 @@ def start():
 
     print('\n\n NOTE: MASTER PASSWORD IS A USER DEFINED VALUE\
            \n NEEDED TO ENCRYPT & DECRYPT DATA CORRECTLY.')
+
 
 def encrypt(password):
     salt = os.urandom(32)  # Ein neues Salz für jedes Passwort
@@ -118,6 +120,3 @@ def backup():
     df.to_csv(cp, index=False)  # save a copy of same, cp = path
     os.chdir(dp)  # Restoring the default path
     print(Textcolor.OKGREEN + '\n' * 2 + " BACKUP SUCCESSFULLY CREATED." + Textcolor.ENDC)
-
-
-
