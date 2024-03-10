@@ -27,7 +27,7 @@ def start():
 
 def add(name, dataBase_password, url, salt):
     user_data = {'Url/App name': [url], 'Username': [name],
-                 'Password': [dataBase_password], 'Salt': [salt]}  # will save in same order (,) to csv file
+                 'Password': [dataBase_password], 'Salt': [salt.hex()]}  # will save in same order (,) to csv file
 
     df = pd.DataFrame(user_data)  # pack user data into data frame
     df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
@@ -51,8 +51,7 @@ def decrypt(dataBase_password, salt):
     hash_object = hash.sha256()
     hash_object.update(salt + dataBase_password.encode())
     dec_password = hash_object.hexdigest()
-
-    print(f"Decrypted Password: {dec_password}")
+    print(dec_password)
     return dec_password
 
 

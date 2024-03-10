@@ -45,7 +45,7 @@ while True:  # infinite loop
 
             salt = generate_salt()  # call function to generate salt
             dataBase_password = encrypt(password, salt)  # call function to encrypt password and get salt
-            add(name, dataBase_password, url, salt.hex())  # call function to add user data
+            add(name, dataBase_password, url, salt)  # call function to add user data
 
 
 
