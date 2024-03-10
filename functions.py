@@ -1,10 +1,9 @@
-import hashlib as hash
 import os
 
 import pandas as pd
 
 from formating import Textcolor
-
+import hashlib as hash
 
 def start():
     data_file = os.path.isfile('data.csv')  # check whether data file is there or not
@@ -26,41 +25,21 @@ def start():
 
 
 def encrypt(password):
-    salt = os.urandom(32)  # Ein neues Salz für jedes Passwort
+    salt = os.urandom(32)
     hash_object = hash.sha256()
     hash_object.update(salt + password.encode())
-    encrypted_pass = hash_object.hexdigest()  # Verschlüsseltes Passwort
+    encrypted_pass = hash_object.hexdigest()
+    return encrypted_pass, salt.hex(),
 
-    return encrypted_pass
 
-
-def decrypt(find_password):
-    # Extract the salt from the encrypted password
-    salt = bytes.fromhex(find_password)[:32]
-
-    # Recreate the hash using the provided password and extracted salt
+def decrypt(find_password, salt):
+    salt = bytes.fromhex(salt)
     hash_object = hash.sha256()
     hash_object.update(salt + find_password.encode())
     dec_password = hash_object.hexdigest()
 
+    print(f"Decrypted Password: {dec_password}")
     return dec_password
-
-
-def create_csv():
-    data = {'Url/App name': [], 'Username': [], 'Password': []}  # empty value dict
-    df = pd.DataFrame(data)  # create new pandas DataFrame
-    df.to_csv('data.csv', index=False)  # Write DataFrame to a new CSV file
-    print(Textcolor.OKGREEN + "Data file created successfully." + Textcolor.ENDC)
-
-
-def add(name, encrypted_pass, url):
-    user_data = {'Url/App name': [url], 'Username': [name],
-                 'Password': [encrypted_pass]}  # will save in same order (,) to csv file
-
-    df = pd.DataFrame(user_data)  # pack user data into data frame
-    df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
-
-    print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
 
 
 def search(url=""):
@@ -91,8 +70,32 @@ def search(url=""):
     return dfS
 
 
-def edit():
-    pass
+def create_csv():
+    data = {'Url/App name': [], 'Username': [], 'Password': [], 'Salt': []}  # empty value dict
+    df = pd.DataFrame(data)  # create new pandas DataFrame
+    df.to_csv('data.csv', index=False)  # Write DataFrame to a new CSV file
+    print(Textcolor.OKGREEN + "Data file created successfully." + Textcolor.ENDC)
+
+
+def add(name, encrypted_pass, url, salt):
+    user_data = {'Url/App name': [url], 'Username': [name],
+                 'Password': [encrypted_pass], 'Salt': [salt]}  # will save in same order (,) to csv file
+
+    df = pd.DataFrame(user_data)  # pack user data into data frame
+    df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
+
+    print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
+
+
+def edit(index, new_name, new_password):
+    df = pd.read_csv("data.csv")  # using 0th column (Url) as index
+
+    # Edit row at given 'index'
+
+    df.loc[index, ['Username', 'Password']] = [new_name, new_password]  # replace it with new user data
+    df.to_csv('data.csv', index=False)  # save it
+
+    print(Textcolor.OKGREEN + '\n' * 2 + ' EDITED SUCCESSFULLY' + Textcolor.ENDC)
 
 
 def delete(index):
