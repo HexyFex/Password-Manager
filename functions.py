@@ -119,11 +119,11 @@ def backup():
     dp = os.getcwd()  # get the default path, initial directory
     os.chdir("..")  # change the current working directory, one dir back
     cp = os.getcwd()  # get the current path
-    cp = cp + "\MYPmanager_Backup\data.csv"  # add FolderName & FileName to obtained path
+    cp = cp + "\Backups\data.csv"  # add FolderName & FileName to obtained path
 
-    if os.path.isdir('MYPmanager_Backup') == False:  # If 'BackupMYPmanager' not exists
+    if os.path.isdir('Backups') == False:  # If 'BackupMYPmanager' not exists
 
-        os.makedirs('MYPmanager_Backup')  # Create one, for back up
+        os.makedirs('Backups')  # Create one, for back up
 
     df.to_csv(cp, index=False)  # save a copy of same, cp = path
     os.chdir(dp)  # Restoring the default path
