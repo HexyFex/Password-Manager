@@ -1,8 +1,7 @@
 import secrets  # for generating random password
 import string  # for generating random password and for string operations
 
-from formating import Textcolor  # import Textcolor from formating.py
-from functions import encrypt, add, search, delete, backup, start, edit, generate_salt  # import functions from functions.py
+from functions import *
 
 alpha = string.ascii_letters + string.digits
 
@@ -13,11 +12,9 @@ print(Textcolor.HEADER + """\n
 """ + Textcolor.ENDC)
 start()  # call start function
 
-
 # Main Menu
 while True:  # infinite loop
     try:  # try block to handle exceptions
-
 
         print("\n" * 3 + " [01] STORE A PASSWORD\
         \n\n [02] SEARCH CREDENTIAL\

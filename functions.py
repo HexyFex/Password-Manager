@@ -1,9 +1,10 @@
+import hashlib as hash
 import os
 
 import pandas as pd
 
-from formating import Textcolor
-import hashlib as hash
+from formating import *
+
 
 def start():
     data_file = os.path.isfile('data.csv')  # check whether data file is there or not
@@ -23,6 +24,7 @@ def start():
     print('\n\n NOTE: MASTER PASSWORD IS A USER DEFINED VALUE\
            \n NEEDED TO ENCRYPT & DECRYPT DATA CORRECTLY.')
 
+
 def add(name, dataBase_password, url, salt):
     user_data = {'Url/App name': [url], 'Username': [name],
                  'Password': [dataBase_password], 'Salt': [salt]}  # will save in same order (,) to csv file
@@ -32,9 +34,11 @@ def add(name, dataBase_password, url, salt):
 
     print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
 
+
 def generate_salt():
     salt = os.urandom(32)
     return salt
+
 
 def encrypt(password, salt):
     hash_object = hash.sha256()
@@ -43,10 +47,9 @@ def encrypt(password, salt):
     return dataBase_password
 
 
-def decrypt(find_password, salt):
-    salt = bytes.fromhex(salt)
+def decrypt(dataBase_password, salt):
     hash_object = hash.sha256()
-    hash_object.update(salt + find_password.encode())
+    hash_object.update(salt + dataBase_password.encode())
     dec_password = hash_object.hexdigest()
 
     print(f"Decrypted Password: {dec_password}")
@@ -71,8 +74,9 @@ def search(url=""):
 
     for index, row in dfS.iterrows():  # iterate over all rows
 
-        find_password = dfS.loc[index, 'Password']  # go through all the rows of Password column ; get passwords
-        dec_password = decrypt(find_password)  # decrypt that
+        dataBase_password = dfS.loc[index, 'Password']  # go through all the rows of Password column ; get passwords
+        salt = dfS.loc[index, 'Salt']  # go through all the rows of Salt column ; get salts
+        dec_password = decrypt(dataBase_password, salt)  # decrypt that
         password.append(dec_password)
 
     dfS = dfS.set_index(index_d)  # set to default/original index for reference
@@ -86,9 +90,6 @@ def create_csv():
     df = pd.DataFrame(data)  # create new pandas DataFrame
     df.to_csv('data.csv', index=False)  # Write DataFrame to a new CSV file
     print(Textcolor.OKGREEN + "Data file created successfully." + Textcolor.ENDC)
-
-
-
 
 
 def edit(index, new_name, new_password):
