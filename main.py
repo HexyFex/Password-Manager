@@ -1,91 +1,12 @@
-import hashlib as hash  # for encrypting password
-import os  # for clearing screen
 import os.path  # for checking file existence
 import secrets  # for generating random password
 import string  # for generating random password and for string operations
 
-import pandas as pd  # for handling csv file
-
 from formating import Textcolor  # import Textcolor from formating.py
+from functions import encrypt, create_csv, add, search, delete, backup
 
 os.system('color')
-
 alpha = string.ascii_letters + string.digits
-
-
-def encrypt(password):
-    salt = os.urandom(32)  # Ein neues Salz für jedes Passwort
-    hash_object = hash.sha256()
-    hash_object.update(salt + password.encode())
-    encrypted_pass = hash_object.hexdigest()  # Verschlüsseltes Passwort
-
-    print(Textcolor.OKGREEN + '\n' * 2 + " PASSWORD ENCRYPTED SUCCESSFULLY." + Textcolor.ENDC)
-
-    return encrypted_pass
-
-
-def decrypt(password):
-    salt = os.urandom(32)  # Ein neues salt für jedes Passwort
-    hash_object = hash.sha256()
-    hash_object.update(salt + password.encode())
-    decrypted_pass = hash_object.hexdigest()  # Verschlüsseltes Passwort
-
-    print(Textcolor.OKGREEN + '\n' * 2 + "PASSWORD DECRYPTED SUCCESSFULLY." + Textcolor.ENDC)
-
-    return decrypted_pass
-
-
-# Function to create a csv file
-def create_csv():
-    data = {'Url/App name': [], 'Username': [], 'Password': []}  # empty value dict
-    df = pd.DataFrame(data)  # create new pandas DataFrame
-    df.to_csv('data.csv', index=False)  # Write DataFrame to a new CSV file
-    print(Textcolor.OKGREEN + "Data file created successfully." + Textcolor.ENDC)
-
-
-def add(name, encrypted_pass, url):
-    user_data = {'Url/App name': [url], 'Username': [name],
-                 'Password': [encrypted_pass]}  # will save in same order (,) to csv file
-
-    df = pd.DataFrame(user_data)  # pack user data into data frame
-    df.to_csv('data.csv', mode='a', header=False, index=False)  # Save to CSV file, append New row
-
-    print(Textcolor.OKGREEN + '\n' * 2 + ' ADDED SUCCESSFULLY' + Textcolor.ENDC)
-
-
-def search(url=""):
-    df = pd.read_csv('data.csv')  # read data from csv file
-    if url == "":
-        data = pd.read_csv('data.csv')  # read data from csv file
-        return data
-    else:
-        data = pd.read_csv('data.csv')  # read data from csv file
-        data = data[data['Url/App name'] == url]  # search data
-        return data
-
-
-def edit():
-    pass
-
-
-def delete(index):
-    pass
-
-
-def backup():
-    df = pd.read_csv("data.csv")  # read the orignal file
-    dp = os.getcwd()  # get the default path, initial directory
-    os.chdir("..")  # change the current working directory, one dir back
-    cp = os.getcwd()  # get the current path
-    cp = cp + "\MYPmanager_Backup\data.csv"  # add FolderName & FileName to obtained path
-
-    if os.path.isdir('MYPmanager_Backup') == False:  # If 'BackupMYPmanager' not exists
-
-        os.makedirs('MYPmanager_Backup')  # Create one, for back up
-
-    df.to_csv(cp, index=False)  # save a copy of same, cp = path
-    os.chdir(dp)  # Restoring the default path
-    print(Textcolor.OKGREEN + '\n' * 2 + " BACKUP SUCCESSFULLY CREATED." + Textcolor.ENDC)
 
 
 print(Textcolor.HEADER + """\n
@@ -157,12 +78,24 @@ while True:
         elif menu_option == 2:
             os.system('cls')  # clear all
 
-            url = input("\n ENTER URL OR APP NAME, YOU WANT TO SEARCH: ")
-            data = search(url)
-            data = data.to_markdown(tablefmt="orgtbl", index=False)
+            print(textcolor.BOLD + "\n" * 2, "SEARCH CREDENTIAL \n" + Textcolor.ENDC)
+            print("\n [01] SEE A SPECIFIC SAVED CREDENTIAL\
+                      \n\n [02] SEE ALL SAVED CREDENTIALS")
+            sub_option = int(input("\n" * 3 + " SELECT AN OPTION & PRESS ENTER : "))
 
-            print("\n")
-            print(data)
+            if (sub_option == 1):
+
+                url = input("\n ENTER URL OR APP NAME,, YOU WANT TO SEARCH: ")
+                show = search(url)  # call function to search/extract user data from csv
+                show = show.to_markdown(tablefmt="orgtbl", index=False)  # Pretty Print (Dataframe To Markdown)
+                print('\n')
+                print(show)
+
+            else:
+                show = search()  # call function with no argument
+                show = show.to_markdown(tablefmt="orgtbl", index=False)  # Pretty Print (Dataframe To Markdown)
+                print('\n')
+                print(show)
 
 
         # edit a credential
@@ -181,16 +114,24 @@ while True:
             os.system('cls')
             print(Textcolor.OKGREEN + " DELETE A CREDENTIAL" + Textcolor.ENDC)
             url = input("\n ENTER URL OR APP NAME, YOU WANT TO DELETE: ")
-            data = search(url)
-            data = data.to_markdown(tablefmt="orgtbl", index=False)
 
-            print("\n")
-            print(data)
+            show = search(url)  # call fun, to show respective data related to url
+            show_md = show.to_markdown(tablefmt="orgtbl", index=False)  # Pretty Print
+            print('\n')
+            print(show_md)
+            print('\n' * 2)
+
+            # multiple credentials found, len = rows
+            if (len(show) > 1):
+                index = int(input("\n SELECT AN INDEX VALUE & PRESS ENTER : "))
+            else:
+                index = show.index.values  # take default index
+                index = int(index)
 
             confirmation = input("\n ARE YOU SURE TO DELETE THIS CREDENTIAL? (Y/N): ")
 
-            if confirmation == 'Y':
-                delete(url)
+            if confirmation == 'Y' or confirmation == 'y':
+                delete(index)  # call fun, to delete respective data
             else:
                 print(Textcolor.WARNING + " CANCELLED." + Textcolor.ENDC)
 
