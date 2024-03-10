@@ -24,7 +24,7 @@ start()  # call start function
 while True:  # infinite loop
     try:  # try block to handle exceptions
 
-        os.system('cls')  # clear all
+        #os.system('cls')  # clear all
 
         print("\n" * 3 + " [01] STORE A PASSWORD\
         \n\n [02] SEARCH CREDENTIAL\
